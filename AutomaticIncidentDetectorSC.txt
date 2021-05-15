@@ -1,0 +1,166 @@
+# detection of an incident will occur when the paths of two objects, person and car (or truck), Occur within an alloted time frame.
+
+# what is needed is a way to compare two objects paths
+
+# this will be done by looping though the objects id numbers, for the length of the object is there, storing all coordinates, and then creating a line
+# if both objects lines cross within a given frame range then they class as an incident, (will use already done incidents to callibrate this process)
+
+#peusdo code
+
+# reorganise the csv file to increment by object id (dont know of if this will be needed)
+
+#loop though object people
+  #when found person, work out its path ( do a lenght of life check)
+  # loop though all surrounding key objects
+    #find key objects path and then check if they intersect over a frame range (and key objects life is long enough)
+    # this will be done if one of the objects x/y coordinates matches very close to persons, then if so check the frame id for these two points is within 5seconds?
+    # if this is the case record this incident by appending to a list like json extraction
+
+# surounding objects, are objects of the key class that exsist while the person object is found ( due to flicking problem there could be many unessesary objects, so are part of the process objects must exsist for so long)
+
+# when recording all object data need to take time and turn it to seconds for easy comparison. OR use frame id which is just milliseconds
+import csv
+
+print('start')
+extracteddata = "/mydrive/AidTest.csv"
+
+inputfile = "/mydrive/CCTVDATA/EvalVidCutLong.mp4"
+outputfile = "/mydrive/AIDSOutput/TestOut.csv"
+
+
+InData = []# output list
+#InData.append([]) # needed for multi dimensional, not needed 1/10/2020
+
+#templist.append(objectarray)# adds extracted data to the object array
+
+numberofobjects = 110 # need an automated way to work this out, classic for loop of largest or replace
+objcounter = 0
+templist = []
+xylist = []
+with open(extracteddata, 'r') as file:
+    csv_file = csv.DictReader(file)
+    for row in csv_file:
+        #print(dict(row))
+        InData.append(dict(row))
+
+#print(InData)
+#testing ---------------------------------------------------------
+
+
+#testing -----------------------------------------------------------
+#print(InData[1]['frame_id'])
+
+for i in (range(len(InData))):# this loop takes and records the first instance of every object
+  for x in range(numberofobjects):
+    if (InData[i]['object_id']) == str(objcounter):
+      #print(InData[i]['object_id'])
+      #print(InData[i])
+      objcounter += 1
+
+# loop and add to counter for every indata that has object ID
+temp = 0
+
+for y in (range(len(InData))):
+  if (InData[y]['object_id']) == str(10):
+    temp += 1
+
+#print(temp)
+
+# print all objects that exsit for more then 5
+
+objcounter = 0
+temp = 0
+for i in (range(len(InData))):# this loop takes and records every object that lasts more then 5 frames
+  for x in range(numberofobjects):
+    if (InData[i]['object_id']) == str(objcounter):
+      temp = 0
+      for y in (range(len(InData))):
+        if (InData[y]['object_id']) == str(objcounter):
+          temp += 1
+      if (temp > 5):
+        templist.append(InData[i]['object_id'])
+        #print(InData[i]['object_id'])
+      objcounter += 1
+
+print(templist)
+print(len(templist))
+
+# how about a new list for the objects, with every single xy the object is at then can be ran though when checking objects 
+temp = 0
+for y in (range(len(InData))):
+  if (InData[y]['object_id']) == str(10):
+    xylist.append(InData[y]['center_x'])
+    temp += 1
+
+print(xylist)
+#'center_x': '0.070523', 'center_y': '0.453681',
+
+#--
+print('Test Start')
+# This loop takes every object and stores its number in a new list called, list of objects
+newtemplist = []
+objectlist = []
+objcounter = 0
+
+for i in (range(len(InData))):# this loop creates an Object list in order of object number 
+  for x in range(numberofobjects):
+    newtemplist = []
+    if (InData[i]['object_id']) == str(objcounter):
+      #print(InData[i]['object_id'])
+      newtemplist.append(InData[i]['object_id'])
+      newtemplist.append(InData[i]['class_id'])
+      newtemplist.append(InData[i]['center_x'])
+      newtemplist.append(InData[i]['center_y'])
+      objectlist.append(newtemplist)
+      objcounter += 1
+
+print(objectlist)
+print(objectlist[1])
+#--
+# this loop will take all the xy coordinates of the objects and store in a new list, coodinateslist (new name maybe)
+print('Test Start')
+objcounter = 0
+temp = 0
+
+tempcolist = []
+midlist = []
+coordinateslist = []
+#Outputdata.append([]) # needed for multi dimensional
+for i in (range(len(InData))):# this loop takes and records every object that lasts more then 5 frames and records its xy into a list 
+  for x in range(numberofobjects):
+    if (InData[i]['object_id']) == str(objcounter):
+      temp = 0
+      tempcolist = []
+      midlist = []
+      for y in (range(len(InData))):
+        tempcolist = []
+        if (InData[y]['object_id']) == str(objcounter):
+          tempcolist.append(InData[y]['center_x'])
+          tempcolist.append(InData[y]['center_y'])
+          midlist.append(tempcolist)
+          temp += 1
+      if (temp > 5):
+        coordinateslist.append(midlist)
+      objcounter += 1
+
+print(coordinateslist[0])# just print tests 
+print(coordinateslist[0][0])
+print(len(coordinateslist))
+print(len(coordinateslist[0]))
+#Test Start
+#['0.221632', '0.393432', '0.22141', '0.39244', '0.221353', '0.393795', '0.22118', '0.390952', '0.221318', '0.389507', '0.22118', '0.387063', '0.22118', '0.387063', '0.221091', '0.38693', '0.221091', '0.38693', '0.221399', '0.386952', '0.221742', '0.386977', '0.221737', '0.387036', '0.221744', '0.387026', '0.221588', '0.387925', '0.221468', '0.388553', '0.221468', '0.388599', '0.221641', '0.388479', '0.221845', '0.39087', '0.222042', '0.391781', '0.222486', '0.393785', '0.2224', '0.393943', '0.222367', '0.393867', '0.222367', '0.393867', '0.222226', '0.394079', '0.222139', '0.39393', '0.222185', '0.394163', '0.22213', '0.394837', '0.222083', '0.394883', '0.222134', '0.394348', '0.222262', '0.394743', '0.221843', '0.394887', '0.222238', '0.395045']
+#45
+#fin
+
+
+#b = 20
+#for i in (range(len(InData))):
+ # if (InData[i]['frame_id'] == b): # numbers need to be in ''
+  #  print(InData[i])
+
+#if Outputdata[f][i]['object_id'] == '-1':# -1 means its a new object
+
+#{'frame_id': '30', 'placement_id': '19', 'class_id': '0', 'name': 'person', 'center_x': '0.070523', 'center_y': '0.453681', 'center_z': '0.8330083519012659', 'width': '0.025608', 'height': '0.094908', 'confidence': '0.959943', 'object_id': '25', 'next_frame_object': '19', 'x_distance': '-0.09085499999999999', 'y_distance': '-0.526598', 'z_distance': '0.09812657096213684', 'timestamp': '0:21:3:10'}
+
+
+print('fin')
