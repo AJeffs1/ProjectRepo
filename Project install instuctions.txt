@@ -1,0 +1,56 @@
+Install Instructions
+
+Boot Pc in Linux
+Move Install packet folder over to the documents folder
+
+--install anacoda
+-- -- navigate to install file in terminal, run the file, follow basic install commands
+
+-- set up yolo object detection enviroment
+-- -- navigate to yolomasterfile that was moved over, run commands below
+-- -- conda env create -f conda-gpu.yml
+-- -- conda activate yolov4-gpu
+
+-- Move chunk number over to yolo_master/data, record which number the pc 
+
+-- run in chunk folder “ ls > filenames.txt “ , remove extra files in the txt file.
+
+-- edit chunk detector script in master and run
+
+-- check data has been output on first pc before leaving
+
+-- end of instructions
+
+-- old commands --
+
+Activate anaconda
+Run “ ls > filenames.txt “ 
+Double check file paths and run object detector script
+
+conda env create -f conda-gpu.yml
+conda activate yolov4-gpu
+
+pip install -r requirements-gpu.txt
+
+
+Check output files
+Zip folder and move to portable hard drive
+
+python save_model.py --model yolov4 
+
+move weights to data
+run "   python save_model.py --model yolov4 
+move chunk to data
+run ls > filenames.txt in data/chunkx/5FPSOUT/
+
+run test on " python object_tracker.py --video ./data/video/test.mp4 --output ./outputs/demo.avi --model yolov4 --info
+
+move chunk detctor over 
+run Chunkdetector ** makesure file path is right
+python Chunkdetecor.py
+
+-- help
+Run git install
+
+https://github.com/theAIGuysCode/yolov4-deepsort
+
